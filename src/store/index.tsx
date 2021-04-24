@@ -4,23 +4,23 @@ import { createStore, Dispatch, AnyAction, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
 
-interface Post {
-  userId: number,
-  id: number,
+export interface Post {
+  user_id?: number,
+  id?: number,
   title: string,
   body: string,
 }
 
 export interface User {
-  id: number,
+  id?: number,
   name: string,
-  useranme: string,
+  username: string,
   email: string
 }
 
-interface Comment {
-  postId: number,
-  id: number,
+export interface Comment {
+  post_id?: number,
+  id?: number,
   name: string,
   email: string,
   body: string,
@@ -34,19 +34,21 @@ const GET_PAGE = 'GET_PAGE';
 const GET_QUERY = 'GET_QUERY';
 const SELECTED_USER = 'SELECTED_USER';
 const GET_POST_ID = 'GET_POST_ID';
-const GET_TITLE = 'GET_TITLE';
-const GET_BODY = 'GET_BODY';
+const GET_NEW_USER = 'GET_NEW_USER';
+const GET_NEW_POST = 'GET_NEW_POST';
+const GET_NEW_COMMENT = 'GET_NEW_COMMENT';
 
 // Action creators - a function returning an action object
 export const setPosts = (posts: Post[]) => ({ type: GET_POSTS, value: posts });
 export const setUsers = (users: User[]) => ({ type: GET_USERS, value: users });
-export const setComments = (comments: Comment) => ({ type: GET_COMMENTS, value: comments });
+export const setComments = (comments: Comment[]) => ({ type: GET_COMMENTS, value: comments });
 export const setPage = (page: number) => ({ type: GET_PAGE, value: page });
 export const setQuery = (query: string) => ({ type: GET_QUERY, value: query });
 export const setSelectedUser = (selectedUser: number) => ({ type: SELECTED_USER, value: selectedUser });
-export const setPostId = (postId: number) => ({ type: GET_POST_ID, value: postId }); 
-export const setTitle = (title: string) => ({ type: GET_TITLE, value: title });
-export const setBody = (body: string) => ({ type: GET_BODY, value: body });
+export const setPostId = (postId: number) => ({ type: GET_POST_ID, value: postId });
+export const setNewUser = (newUser: User) => ({ type: GET_NEW_USER, value: newUser });
+export const setNewPost = (newPost: Post) => ({ type: GET_NEW_POST, value: newPost });
+export const setNewComment = (newComment: Comment) => ({ type: GET_NEW_COMMENT, value: newComment });
 
 // Selectors - a function receiving Redux state and returning some data from it
 export const getListOfPosts = (state: RootState) => state.posts;
@@ -56,8 +58,9 @@ export const getPage = (state: RootState) => state.page;
 export const getQuery = (state: RootState) => state.query;
 export const getSelectedUser = (state: RootState) => state.selectedUser;
 export const getPostId = (state: RootState) => state.postId;
-export const getTitle = (state: RootState) => state.title;
-export const getBody = (state: RootState) => state.body;
+export const getNewUser = (state: RootState) => state.newUser;
+export const getNewPost = (state: RootState) => state.newPost;
+export const getNewComment = (state: RootState) => state.newComment;
 
 // Initial state
 export type RootState = {
@@ -68,8 +71,9 @@ export type RootState = {
   query: string,
   selectedUser: number,
   postId: number,
-  title: string,
-  body: string,
+  newUser: User,
+  newPost: Post,
+  newComment: Comment,
 };
 
 const initialState: RootState = {
@@ -80,8 +84,20 @@ const initialState: RootState = {
   query: '',
   selectedUser: 0,
   postId: 0,
-  title: '',
-  body: '',
+  newUser: {
+    name: '',
+    username: '',
+    email: '',
+  },
+  newPost: {
+    title: '',
+    body: '',
+  },
+  newComment: {
+    name: '',
+    email: '',
+    body: '',
+  },
 };
 
 // Get data from server
@@ -126,28 +142,33 @@ const rootReducer = (state = initialState, action: AnyAction) => {
     case GET_QUERY:
       return {
         ...state,
-        query: action.query,
+        query: action.value,
       };
     case SELECTED_USER:
       return {
         ...state,
-        selectedUser: action.selectedUser,
+        selectedUser: action.value,
       }
     case GET_POST_ID:
       return {
         ...state,
-        postId: action.postId,
+        postId: action.value,
       };
-    case GET_TITLE:
+    case GET_NEW_USER:
       return {
         ...state,
-        title: action.title,
-      }
-    case GET_BODY:
+        newUser: action.value,
+      };
+    case GET_NEW_POST:
       return {
         ...state,
-        body: action.body,
-      }
+        newPost: action.value,
+      };
+    case GET_NEW_COMMENT:
+      return {
+        ...state,
+        newComment: action.value,
+      };
     default:
       return state;
   }

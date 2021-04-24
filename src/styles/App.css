@@ -2,21 +2,31 @@
   box-sizing: border-box;
 }
 
+body {
+  background-color: #FFFFE0;
+}
+
 .app {
   padding: 20px 40px;
 }
 
-.app_title {
-  text-align: center;
-  margin-bottom: 20px;
+.loader {
+  width: max-content;
+  margin: 2rem auto 0;
 }
 
-.post {
-  width: 90%;
-  margin: 0 10px 20px 0;
-  padding: 10px;
-  border: 5px solid black;
-  border-radius: 30px;
+.loader__title {
+  text-align: center;
+  color: #696969;
+  margin-bottom: 1rem;
+}
+
+.app__title {
+  text-align: center;
+  color: #696969;
+  text-decoration: underline;
+  margin-bottom: 20px;
+  text-shadow: 6px 6px 12px;
 }
 
 .list_of_posts {
@@ -25,18 +35,81 @@
   align-items: flex-start;
 }
 
-.link {
-  text-decoration: none;
-  color: white;
-  font-size: 1rem;
+.posts__post {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 90%;
+  margin: 0 10px 20px 0;
+  padding: 10px;
+  border: 2px solid black;
+  border-radius: 30px;
+  background-color: #fff;
+  box-shadow: 6px 6px 12px;
 }
 
-.form {
-  min-width: 35%;
+.posts__buttons {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  word-wrap: none;
+  word-spacing: unset;
+}
+
+.post__info {
+  width: 90%;
+  border: 5px solid black ;
+  padding: 10px;
+  text-align: center;
+  background-color: #fff;
+  border-radius: 30px;
+  box-shadow: 6px 6px 12px;
 }
 
 .filters {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
+  margin-bottom: 20px;
+}
+
+.filters__field {
+  background-color: #fff;
+  box-shadow: 6px 6px 12px;
+  border-radius: 5px;
+}
+
+.posts__title {
+  font-size: 1rem;
+  font-weight: bold;
+  width: 70%;
+}
+
+.comments {
+  width: 80%;
+  border: 2px solid #696969;
+  margin: 20px auto 10px;
+  padding: 10px;
+}
+
+.comment__form {
+  min-width: 35%;
+}
+
+.comments__list {
+  list-style: none;
+  padding: 0;
+}
+
+.comments__item {
+  text-align: center;
+  background-color: #FFE4B5;
+  margin-bottom: 5px;
+  border: 1px solid black;
+  border-radius: 10px;
+}
+
+.pagination {
+  width: max-content;
+  margin: 20px auto 0;
 }

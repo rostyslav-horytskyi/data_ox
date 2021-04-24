@@ -1,39 +1,42 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getCommentsFromServer, getListOfPosts, getPostsFromServer, getUserFromServer, setPage } from "../store";
-
-import Pagination from '@material-ui/lab/Pagination';
-import { makeStyles } from '@material-ui/core/styles';
+import {
+  getCommentsFromServer,
+  getListOfPosts,
+  getListOfUsers,
+  getPostsFromServer,
+  getUserFromServer,
+  getAvailableComments,
+} from "../store";
 
 import '../styles/App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Loader from "react-loader-spinner";
 
 import { Posts } from "./Posts";
-import { useHistory, useLocation } from "react-router";
+import { useLocation } from "react-router";
 import { Filters } from "./Filters";
-import { Comments } from "./Comments";
-import { Button } from "@material-ui/core";
-import { AddingNewPost } from "./AddingNewPost";
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    '& > * + *': {
-      marginTop: theme.spacing(2),
-    },
-  },
-}));
+import { AddingNewPost } from "./AddingNewPosts";
+import { AppContext } from "./AppContext";
+import { PostInfo } from './PostInfo';
+import { PaginationForPosts } from "./PaginationForPosts";
 
 const App = () => {
   const dispatch = useDispatch();
-  const classes = useStyles();
-  const history = useHistory();
   const { search } = useLocation();
   const searchParams = new URLSearchParams(search);
-  const page = searchParams.get('page') || 1;
-  const posts = useSelector(getListOfPosts);
+
+  const postsFromServer = useSelector(getListOfPosts);
+  const commentsFromServer = useSelector(getAvailableComments);
+  const usersFromServer = useSelector(getListOfUsers);
+
   const postInfo = searchParams.get('postInfo') || 0;
 
-  console.log(+postInfo)
+  const {
+    setPosts,
+    setUsers,
+    setComments
+  } = useContext(AppContext);
 
   useEffect(() => {
     dispatch(getPostsFromServer());
@@ -45,52 +48,55 @@ const App = () => {
 
   useEffect(() => {
     dispatch(getCommentsFromServer());
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    if (postsFromServer.length) {
+      setPosts(postsFromServer);
+    }
+
+    if (postsFromServer.length) {
+      setUsers(usersFromServer);
+    }
+
+    if (postsFromServer.length) {
+      setComments(commentsFromServer);
+    }
+  }, []);
 
   return (
     <div className="app">
-      <h1 className="app_title">My React App</h1>
-      <div className="list_of_posts">
-        <div className="posts">
-          {+postInfo > 0 && (
-            <div className="user_info">
-              {posts.filter(post => post.id === +postInfo).map(post => (
-                <>
-                  <h2>{post.title}</h2>
-                  <div>{post.body}</div>
-                </>
-              ))}
-              <Comments />
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={() => {
-                  searchParams.delete('postInfo');
-                  history.push({ search: searchParams.toString() });
-                }}
-              >
-                Close
-              </Button>
+      {!postsFromServer.length
+      && !usersFromServer.length
+      && !commentsFromServer.length ? (
+        <div className="loader">
+          <h1 className="loader__title">Please wait!</h1>
+          <Loader
+            type="Puff"
+            color="#00BFFF"
+            height={200}
+            width={200}
+          />
+        </div>
+      ) : (
+        <>
+          <h1 className="app__title">List of posts</h1>
+          <div className="list_of_posts">
+            <div className="posts">
+              {+postInfo > 0 && (
+                <PostInfo />
+              )}
+
+              <Filters />
+
+              <Posts />
             </div>
-          )}
-          <Filters />
-          <Posts />
-          <div className={classes.root}>
-            <Pagination
-              count={Math.ceil(posts.length / 5)}
-              page={+page}
-              onChange={(_, value) => {
-                dispatch(setPage(value));
-                searchParams.set('page', `${value}`)
-                history.push({ search: searchParams.toString() });
-              }}
-            />
+            <AddingNewPost />
           </div>
-        </div>
-        <div className="form">
-          <AddingNewPost />
-        </div>
-      </div>
+
+          <PaginationForPosts />
+        </>
+      )}
     </div>
   );
 };

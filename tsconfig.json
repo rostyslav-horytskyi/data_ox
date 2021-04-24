@@ -28,5 +28,5 @@
   },
   "include": [
     "src"
-, "src/index.tsx", "src/store"  ]
+, "src/index.tsx", "src/store", "typings"  ]
 }
