@@ -103,17 +103,26 @@ const initialState: RootState = {
 // Get data from server
 export const getPostsFromServer = () => {
   return (dispatch: Dispatch) => getPosts()
-    .then(posts => dispatch(setPosts(posts)));
+    .then(posts => {
+      localStorage.setItem('posts', JSON.stringify(posts));
+      return dispatch(setPosts(posts));
+    });
 };
 
 export const getUserFromServer = () => {
   return (dispatch: Dispatch) => getUsers()
-    .then(users => dispatch(setUsers(users)));
+    .then(users => {
+      localStorage.setItem('users', JSON.stringify(users));
+      return dispatch(setUsers(users));
+    });
 };
 
 export const getCommentsFromServer = () => {
   return (dispatch: Dispatch) => getComments()
-    .then(comments => dispatch(setComments(comments)));
+    .then(comments => {
+      localStorage.setItem('comments', JSON.stringify(comments));
+      return dispatch(setComments(comments));
+    });
 };
 
 // rootReducer - this function is called after dispatching an action

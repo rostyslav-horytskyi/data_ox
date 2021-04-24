@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getCommentsFromServer,
@@ -17,7 +17,6 @@ import { Posts } from "./Posts";
 import { useLocation } from "react-router";
 import { Filters } from "./Filters";
 import { AddingNewPost } from "./AddingNewPosts";
-import { AppContext } from "./AppContext";
 import { PostInfo } from './PostInfo';
 import { PaginationForPosts } from "./PaginationForPosts";
 
@@ -32,12 +31,6 @@ const App = () => {
 
   const postInfo = searchParams.get('postInfo') || 0;
 
-  const {
-    setPosts,
-    setUsers,
-    setComments
-  } = useContext(AppContext);
-
   useEffect(() => {
     dispatch(getPostsFromServer());
   }, []);
@@ -48,20 +41,6 @@ const App = () => {
 
   useEffect(() => {
     dispatch(getCommentsFromServer());
-  }, []);
-
-  useEffect(() => {
-    if (postsFromServer.length) {
-      setPosts(postsFromServer);
-    }
-
-    if (postsFromServer.length) {
-      setUsers(usersFromServer);
-    }
-
-    if (postsFromServer.length) {
-      setComments(commentsFromServer);
-    }
   }, []);
 
   return (
